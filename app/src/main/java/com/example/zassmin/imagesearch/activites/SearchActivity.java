@@ -3,14 +3,12 @@ package com.example.zassmin.imagesearch.activites;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.example.zassmin.imagesearch.R;
 import com.example.zassmin.imagesearch.adapters.ImageResultsAdapter;
@@ -99,14 +97,11 @@ public class SearchActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.i("INFO", imageResults.toString());
             }
         });
     }
 
     public void onSearchFilter(MenuItem item) {
-        // toast data for testing
-        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, FilterActivity.class);
         startActivityForResult(intent, FILTER_REQUEST_CODE);
     }
@@ -116,10 +111,7 @@ public class SearchActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == FILTER_REQUEST_CODE) {
             // set object on data
             imageFilter = ImageFilter.fromIntent(data);
-            // TODO: handle nulls!
             // TODO: will data persist when I leave searchActivity?
-            // toast data for testing
-            Toast.makeText(this, imageFilter.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 }

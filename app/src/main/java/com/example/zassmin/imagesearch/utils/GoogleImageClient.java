@@ -8,13 +8,9 @@ import com.loopj.android.http.RequestParams;
  */
 public class GoogleImageClient {
     // TODO: turn filter options into list, can I render these in the views?
-    // face, photo, clipart, lineart
     private static final String FILTER_IMAGE_TYPE = "imgtype";
-    // black, blue, blue, gray, green, orange, pink, purple, red, teal, white, yellow
     private static final String FILTER_COLOR = "imgcolor";
-    // small|medium|large|xlarge
     private static final String FILTER_IMAGE_SIZE = "imgsz";
-    // specified domain
     private static final String FILTER_SITE = "as_sitesearch";
     private static final String SEARCH_QUERY = "q";
     private static final String SEARCH_IMAGE_COUNT = "rsz";

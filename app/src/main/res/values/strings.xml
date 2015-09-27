@@ -16,5 +16,5 @@
     <string name="image_type_filter">image type</string>
     <string name="site_filter">site</string>
     <string name="set_filters">set filters</string>
-    <string name="filter_site_hint">specified domain</string>
+    <string name="filter_site_hint">example.com</string>
 </resources>
