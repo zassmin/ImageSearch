@@ -1,12 +1,20 @@
 <resources>
     <string name="app_name">Image Search</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">settings</string>
     <string name="search_prompt">enter search query</string>
-    <string name="search_label">Search</string>
-    <string name="image_title">Image Title</string>
+    <string name="search_label">search</string>
+    <string name="image_title">image title</string>
     <string name="image_result">image result</string>
-    <string name="title_activity_image_display">Full Image</string>
+    <string name="menu_filter">filter</string>
+    <string name="title_activity_image_display">full image</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="activity_search">search</string>
+    <string name="title_activity_filter">filter your search</string>
+    <string name="color_filter">color</string>
+    <string name="image_size_filter">image size</string>
+    <string name="image_type_filter">image type</string>
+    <string name="site_filter">site</string>
+    <string name="set_filters">set filters</string>
+    <string name="filter_site_hint">specified domain</string>
 </resources>

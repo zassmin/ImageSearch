@@ -10,12 +10,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.zassmin.imagesearch.R;
 import com.example.zassmin.imagesearch.adapters.ImageResultsAdapter;
+import com.example.zassmin.imagesearch.models.ImageFilter;
 import com.example.zassmin.imagesearch.models.ImageResult;
+import com.example.zassmin.imagesearch.utils.GoogleImageClient;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,12 +29,13 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-// TODO: add icon
 public class SearchActivity extends AppCompatActivity {
     private EditText etQuery;
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter aImageResults;
+    private static final int FILTER_REQUEST_CODE = 22;
+    private ImageFilter imageFilter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +62,7 @@ public class SearchActivity extends AppCompatActivity {
                 // get the image result
                 ImageResult result = imageResults.get(position);
                 // pass image result into the intent
-                i.putExtra("result", result); // needs to be packagable into the extra
+                i.putExtra("result", result); // needs to be packageable into the extra
                 // ^^ to pass in the object, this is why we implement serializable,
                 // it makes the object capable of being encoded - we want to make the ImageResult
                 // object serializable
@@ -76,25 +81,13 @@ public class SearchActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
     public void onImageSearch(View view) {
-        String query = etQuery.getText().toString();
-        // https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=android&rsz=8
-        String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8";
+        RequestParams requestParams = GoogleImageClient.searchParams(imageFilter, etQuery.getText().toString());
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(searchUrl, new JsonHttpResponseHandler() {
+        client.get(GoogleImageClient.SEARCH_URL, requestParams, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 JSONArray imageResultsJson = null; // TODO: better null handling
@@ -109,5 +102,24 @@ public class SearchActivity extends AppCompatActivity {
                 Log.i("INFO", imageResults.toString());
             }
         });
+    }
+
+    public void onSearchFilter(MenuItem item) {
+        // toast data for testing
+        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, FilterActivity.class);
+        startActivityForResult(intent, FILTER_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == FILTER_REQUEST_CODE) {
+            // set object on data
+            imageFilter = ImageFilter.fromIntent(data);
+            // TODO: handle nulls!
+            // TODO: will data persist when I leave searchActivity?
+            // toast data for testing
+            Toast.makeText(this, imageFilter.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 }

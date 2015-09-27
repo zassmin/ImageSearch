@@ -11,8 +11,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".activites.SearchActivity"
-            android:label="@string/app_name"
-            android:logo="@mipmap/ic_launcher" >
+            android:label="@string/activity_search" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,6 +25,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.zassmin.imagesearch.activites.SearchActivity" />
+        </activity>
+        <activity
+            android:name=".activites.FilterActivity"
+            android:label="@string/title_activity_filter" >
         </activity>
     </application>
 
