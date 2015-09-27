@@ -71,6 +71,7 @@ public class FilterActivity extends AppCompatActivity {
     // NOTE: this felt like a simpler approach over adapter overrides, suggested:
     // http://stackoverflow.com/questions/867518/how-to-make-an-android-spinner-with-initial-text-select-one/12221309#12221309
     // I'm guessing performance is at stake here. How/where can I get good benchmarks?
+    // When do you make the choice between overriding android behavior and using an in-house solution, like this one?
     private boolean hasSpinnerPrompt(String value) {
         if (value.contains("select")) {
             return true;

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 
 import com.example.zassmin.imagesearch.R;
+import com.example.zassmin.imagesearch.adapters.EndlessScrollListener;
 import com.example.zassmin.imagesearch.adapters.ImageResultsAdapter;
 import com.example.zassmin.imagesearch.models.ImageFilter;
 import com.example.zassmin.imagesearch.models.ImageResult;
@@ -34,6 +35,7 @@ public class SearchActivity extends AppCompatActivity {
     private ImageResultsAdapter aImageResults;
     private static final int FILTER_REQUEST_CODE = 22;
     private ImageFilter imageFilter = null;
+    private int page = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,37 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                // triggered only when new data needs to be appended to the list
+                loadDataFromGoogleSearchApi(totalItemsCount);
+                return true;
+            }
+        });
+    }
+
+    public void loadDataFromGoogleSearchApi(final int offset) {
+        page = offset;
+        // TODO: stretch - use moreResultsUrl from response instead of reinitializing the searchParams
+        RequestParams requestParams = GoogleImageClient.searchParams(imageFilter, etQuery.getText().toString(), offset);
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(GoogleImageClient.SEARCH_URL, requestParams, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                JSONArray imageResultsJson = null; // TODO: better null handling
+                try {
+                    imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
+                    if (page == 0) {
+                        imageResults.clear();
+                    }
+                    // when you make changes to the adapter, it modifies the underlying data for you
+                    aImageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -83,22 +116,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void onImageSearch(View view) {
-        RequestParams requestParams = GoogleImageClient.searchParams(imageFilter, etQuery.getText().toString());
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(GoogleImageClient.SEARCH_URL, requestParams, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                JSONArray imageResultsJson = null; // TODO: better null handling
-                try {
-                    imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
-                    imageResults.clear(); // NOTE: when we paginate, avoid calling clear, except on the initial result
-                    // when you make changes to the adapter, it modifies the underlying data for you
-                    aImageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        loadDataFromGoogleSearchApi(page);
     }
 
     public void onSearchFilter(MenuItem item) {

@@ -16,14 +16,16 @@ public class GoogleImageClient {
     private static final String SEARCH_IMAGE_COUNT = "rsz";
     private static final String API_VERSION = "1.0";
     private static final String API_VERSION_KEY = "v";
+    private static final String PAGE = "start";
     // TODO: aim to make private to keep google image client calls inside of this class
     public static final String SEARCH_URL =  "https://ajax.googleapis.com/ajax/services/search/images";
 
-    public static RequestParams searchParams(ImageFilter imageFilter, String query) {
+    public static RequestParams searchParams(ImageFilter imageFilter, String query, int page) {
         RequestParams params = new RequestParams();
         params.put(API_VERSION_KEY, API_VERSION);
         params.put(SEARCH_QUERY, query);
-        params.put(SEARCH_IMAGE_COUNT, 8); // FIXME: pass this in as an arg or something
+        params.put(SEARCH_IMAGE_COUNT, 8);
+        params.put(PAGE, page);
         if (imageFilter != null) {
             // FIXME: handle cases when all the filters aren't available
             params.put(FILTER_COLOR, imageFilter.color);

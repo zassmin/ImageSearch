@@ -14,12 +14,13 @@ public class ImageResult implements Serializable {
     public String fullUrl;
     public String title;
     public String thumbUrl;
+    public String nextResultUrl;
 
     public ImageResult(JSONObject json) {
         try {
-           this.fullUrl = json.getString("url");
-           this.thumbUrl = json.getString("tbUrl");
-           this.title = json.getString("title");
+            this.fullUrl = json.getString("url");
+            this.thumbUrl = json.getString("tbUrl");
+            this.title = json.getString("title");
         } catch (JSONException e) {
             e.printStackTrace();
         }
