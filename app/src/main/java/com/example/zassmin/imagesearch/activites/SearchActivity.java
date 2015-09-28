@@ -1,6 +1,9 @@
 package com.example.zassmin.imagesearch.activites;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -9,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.zassmin.imagesearch.R;
 import com.example.zassmin.imagesearch.adapters.EndlessScrollListener;
@@ -81,6 +85,12 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void loadDataFromGoogleSearchApi(final int offset) {
+        // check for internet connectivity
+        if (!isNetworkAvailable()) {
+            Toast.makeText(this, "connect to internet to view images! :)", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         page = offset;
         // TODO: stretch - use moreResultsUrl from response instead of reinitializing the searchParams
         RequestParams requestParams = GoogleImageClient.searchParams(imageFilter, etQuery.getText().toString(), offset);
@@ -131,5 +141,12 @@ public class SearchActivity extends AppCompatActivity {
             imageFilter = ImageFilter.fromIntent(data);
             // TODO: will data persist when I leave searchActivity?
         }
+    }
+
+    private Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 }
