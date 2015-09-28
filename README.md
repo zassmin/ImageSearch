@@ -9,3 +9,6 @@
   * User can scroll down “infinitely” to continue loading more image results (up to 8 pages)
   * Advanced: Robust error handling, check if internet is available, handle error cases, network failures
   * Advanced: Improve the user interface and experiment with image assets and/or styling and coloring
+
+##### walkthrough, it looks slow because my wifi sucks and my computer is slower than usual
+![walkthrough](https://media.giphy.com/media/l41lPm7NQbUUlSNtm/giphy.gif)
