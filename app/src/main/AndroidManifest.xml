@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".activites.SearchActivity"
-            android:label="@string/activity_search" >
+            android:label="@string/activity_search">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -26,7 +26,13 @@ public class ImageDisplayActivity extends AppCompatActivity {
         // find the image view
         ImageView ivImageResult = (ImageView) findViewById(R.id.ivImageResult);
         // load the image url into the imageview using picasso
-        Picasso.with(this).load(imageResult.fullUrl).into(ivImageResult);
+        Picasso.with(this)
+                .load(imageResult.fullUrl)
+                .placeholder(R.mipmap.ic_launcher)
+                .noFade()
+                .resize(800, 800)
+                .centerCrop()
+                .into(ivImageResult);
         // how do you know when you are passing `this` instead of getContext()
     }
 

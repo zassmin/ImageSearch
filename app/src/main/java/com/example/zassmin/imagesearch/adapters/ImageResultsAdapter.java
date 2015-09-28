@@ -1,13 +1,11 @@
 package com.example.zassmin.imagesearch.adapters;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.zassmin.imagesearch.R;
 import com.example.zassmin.imagesearch.models.ImageResult;
@@ -30,14 +28,17 @@ public class ImageResultsAdapter extends ArrayAdapter<ImageResult> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_image_result, parent, false);
         }
         ImageView ivImage = (ImageView) convertView.findViewById(R.id.ivImage);
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
 
         // clear out the image
         ivImage.setImageResource(0);
 
         // populate
-        tvTitle.setText(Html.fromHtml(imageInfo.title));
-        Picasso.with(getContext()).load(imageInfo.thumbUrl).into(ivImage);
+        Picasso.with(getContext())
+                .load(imageInfo.thumbUrl)
+                .placeholder(R.mipmap.ic_launcher)
+                .resize(150, 150)
+                .centerCrop()
+                .into(ivImage);
         return convertView;
     }
 }
