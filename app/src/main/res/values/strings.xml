@@ -17,4 +17,6 @@
     <string name="site_filter">site</string>
     <string name="set_filters">set filters</string>
     <string name="filter_site_hint">example.com</string>
+    <string name="bad_request_message">please update your filters</string>
+    <string name="no_network_connectivity_notice">connect to internet to view images! :)</string>
 </resources>

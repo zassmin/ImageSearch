@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,7 +40,7 @@ public class SearchActivity extends AppCompatActivity {
     private ImageResultsAdapter aImageResults;
     private static final int FILTER_REQUEST_CODE = 22;
     private ImageFilter imageFilter = null;
-    private int page = 0;
+    private int page;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class SearchActivity extends AppCompatActivity {
     public void loadDataFromGoogleSearchApi(final int offset) {
         // check for internet connectivity
         if (!isNetworkAvailable()) {
-            Toast.makeText(this, "connect to internet to view images! :)", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.no_network_connectivity_notice), Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -98,17 +99,25 @@ public class SearchActivity extends AppCompatActivity {
         client.get(GoogleImageClient.SEARCH_URL, requestParams, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                JSONArray imageResultsJson = null; // TODO: better null handling
+                JSONArray imageResultsJson = null;
                 try {
                     imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
-                    if (page == 0) {
-                        imageResults.clear();
-                    }
                     // when you make changes to the adapter, it modifies the underlying data for you
                     aImageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (statusCode == 400) { // only doing 400 since other http error are unlikely for this request
+                    Toast.makeText(getBaseContext(), getString(R.string.bad_request_message), Toast.LENGTH_LONG).show();
+                    return;
+                }
+                // logging in case other errors occur
+                Log.i("ERROR", "response: " + responseString + ", status: " + statusCode);
+                super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
     }
@@ -126,6 +135,8 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void onImageSearch(View view) {
+        page = 0; // for subsequent searches
+        aImageResults.clear(); // clear out old results
         loadDataFromGoogleSearchApi(page);
     }
 
